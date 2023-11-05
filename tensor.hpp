@@ -1,3 +1,18 @@
+//--- 25/25 checks passed ---
+
+/*
+==2013== LEAK SUMMARY:
+==2013==    definitely lost: 0 bytes in 0 blocks
+==2013==    indirectly lost: 0 bytes in 0 blocks
+==2013==      possibly lost: 0 bytes in 0 blocks
+==2013==    still reachable: 188,344 bytes in 3 blocks
+==2013==         suppressed: 0 bytes in 0 blocks
+==2013==
+==2013== For lists of detected and suppressed errors, rerun with: -s
+==2013== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+Profiling timer expired
+*/
+
 #pragma once
 
 #include <iostream>
