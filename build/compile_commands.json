@@ -1,0 +1,12 @@
+[
+{
+  "directory": "/home/sanju2204/fauprojects/advpt/tensor/build",
+  "command": "/usr/bin/g++   -g -Wall -Wextra -pedantic -Werror -pg -g -std=gnu++20 -o CMakeFiles/test_tensor.dir/test_tensor.cpp.o -c /home/sanju2204/fauprojects/advpt/tensor/test_tensor.cpp",
+  "file": "/home/sanju2204/fauprojects/advpt/tensor/test_tensor.cpp"
+},
+{
+  "directory": "/home/sanju2204/fauprojects/advpt/tensor/build",
+  "command": "/usr/bin/g++   -g -Wall -Wextra -pedantic -Werror -pg -g -std=gnu++20 -o CMakeFiles/test_matvec.dir/test_matvec.cpp.o -c /home/sanju2204/fauprojects/advpt/tensor/test_matvec.cpp",
+  "file": "/home/sanju2204/fauprojects/advpt/tensor/test_matvec.cpp"
+}
+]
