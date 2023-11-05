@@ -39,7 +39,9 @@ public:
     Tensor(Tensor<ComponentType> &&other) noexcept : 
     mData(std::move(other.mData)),
     mShape(std::move(other.mShape)),
-    mRank(std::move(other.mRank)){}
+    mRank(std::move(other.mRank)){
+        other = Tensor<ComponentType>();
+    }
 
     // Copy-assignment
     Tensor &
