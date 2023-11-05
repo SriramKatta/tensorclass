@@ -105,15 +105,6 @@ bool operator==(const Tensor<ComponentType> &a, const Tensor<ComponentType> &b){
     return a == b;
 }
 
-// Pretty-prints the tensor to stdout.
-// This is not necessary (and not covered by the tests) but nice to have, also for debugging (and for exercise of course...).
-template <Arithmetic ComponentType>
-std::ostream &
-operator<<(std::ostream &out, const Tensor<ComponentType> &tensor)
-{   
-    return out;
-}
-
 // Reads a tensor from file.
 template <Arithmetic ComponentType>
 Tensor<ComponentType> readTensorFromFile(const std::string &filename)
@@ -176,4 +167,43 @@ void writeTensorToFile(const Tensor<ComponentType> &tensor, const std::string &f
         tenfile << tensor(idx) << std::endl;  
     }
     
+}
+
+
+// Pretty-prints the tensor to stdout.
+// This is not necessary (and not covered by the tests) but nice to have, also for debugging (and for exercise of course...).
+template <Arithmetic ComponentType>
+std::ostream &
+operator<<(std::ostream &out, const Tensor<ComponentType> &tensor)
+{   
+    printtensor(out, tensor, tensor.shape());
+    return out;
+}
+template <Arithmetic ComponentType>
+void printtensor(std::ostream &out, const Tensor<ComponentType> &tensor,
+                            const std::vector<size_t> &shape, std::vector<size_t> currentIndices = {}, size_t dimension = 0)
+{
+    const size_t numElements = shape[dimension];
+
+    out << "Dimension " << dimension << " (" << numElements << " elements):" << std::endl;
+
+    // Indentation for nested dimensions.
+    std::string indentation(dimension * 2, ' ');
+
+    for (size_t i = 0; i < numElements; ++i)
+    {
+        currentIndices.push_back(i);
+        if (dimension < shape.size() - 1)
+        {
+            // If not the last dimension, recursively print the inner dimension.
+            out << indentation << "Element " << i << ":" << std::endl;
+            printtensor(out, tensor, shape, currentIndices, dimension + 1);
+        }
+        else
+        {
+            // If the last dimension, print the value.
+            out << indentation << "Element " << i << ": " << tensor(currentIndices) << std::endl;
+        }
+        currentIndices.pop_back();
+    }
 }
