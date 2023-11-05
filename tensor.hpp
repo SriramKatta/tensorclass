@@ -1,6 +1,5 @@
-//--- 25/25 checks passed ---
-
-/*
+/*--- 25/25 checks passed ---
+************************************************************************************************
 ==2013== LEAK SUMMARY:
 ==2013==    definitely lost: 0 bytes in 0 blocks
 ==2013==    indirectly lost: 0 bytes in 0 blocks

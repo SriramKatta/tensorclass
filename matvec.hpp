@@ -1,9 +1,7 @@
 /*
 PASSED: test_matvec: result equal to file
 --- 1/1 checks passed ---
-*/
-
-/*
+************************************************************************************************
 ==2011== LEAK SUMMARY:
 ==2011==    definitely lost: 0 bytes in 0 blocks
 ==2011==    indirectly lost: 0 bytes in 0 blocks
