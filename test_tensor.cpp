@@ -23,6 +23,7 @@ void test_constructor(std::vector< std::pair< bool, std::string > >& results)
 
     results.push_back({c.numElements() == 3 * 5 * 8, "test_constructor: correct number of elements"});
     results.push_back({a({}) == 0, "test_constructor: correct initialization"});
+    //segfault next here
     results.push_back({b({2, 1, 1}) == 0, "test_constructor: correct initialization"});
     results.push_back({c({2, 1, 1}) == 42, "test_constructor: correct initialization"});
     results.push_back({d.rank() == 10, "test_constructor: correct rank"});

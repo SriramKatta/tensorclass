@@ -18,14 +18,15 @@ public:
 
     // Constructs a tensor with arbitrary shape and zero-initializes all elements.
     Tensor(const std::vector<size_t> &shape):
-    mData(std::accumulate(shape.begin(), shape.end(), 0, std::multiplies<int>())),
-    mShape(shape){}
+    mData(std::accumulate(shape.begin(), shape.end(), 1, std::multiplies<size_t>()),0),
+    mShape(shape),
+    mRank(mShape.size()){}
 
     // Constructs a tensor with arbitrary shape and fills it with the specified value.
     explicit Tensor(const std::vector<size_t> &shape, const ComponentType &fillValue):
-    mData(std::accumulate(shape.begin(), shape.end(), 0, std::multiplies<int>()), fillValue),
-    mShape(shape){}
-
+    mData(std::accumulate(shape.begin(), shape.end(), 1, std::multiplies<size_t>()), fillValue),
+    mShape(shape),
+    mRank(mShape.size()){}
 
     // Copy-constructor.
     Tensor(const Tensor<ComponentType> &other):
