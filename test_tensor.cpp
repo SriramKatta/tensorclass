@@ -1,4 +1,3 @@
-
 #include "tensor.hpp"
 
 void check(bool condition, const std::string& msg)

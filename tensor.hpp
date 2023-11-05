@@ -71,24 +71,28 @@ public:
     // Element access function
     const ComponentType &
     operator()(const std::vector<size_t> &idx) const {        
-        size_t loc{} ;
-        for (size_t i = 0; i < idx.size(); i++)        {
-            loc += idx[i] * mShape[i];
-        }
-        return mData[loc];
+        return mData[indextoloc(idx)];
     }
 
     // Element mutation function
     ComponentType &
     operator()(const std::vector<size_t> &idx){
-                size_t loc{0} ;
-        for (size_t i = 0; i < idx.size(); i++)        {
-            loc += idx[i] * mShape[i];
-        }
-        return mData[--loc];
+        return mData[indextoloc(idx)];
     }
-
+    bool operator==(const Tensor<ComponentType> &b) const {
+        auto& a = *this; 
+        return a.mShape == b.mShape && a.mData == b.mData;
+    }
 private:
+    size_t indextoloc(const std::vector<size_t>& idx) const {
+        size_t mul{1}, loc{0};
+        for (int i = mShape.size() - 1; i >= 0; --i)
+        {
+            loc += idx[i] * mul;
+            mul *= mShape[i];
+        }
+        return loc;
+    }
     std::vector<ComponentType> mData;
     std::vector<size_t> mShape;
 };
@@ -98,7 +102,7 @@ private:
 // Returns true if the shapes and all elements of both tensors are equal.
 template <Arithmetic ComponentType>
 bool operator==(const Tensor<ComponentType> &a, const Tensor<ComponentType> &b){
-    return a.shape() == b.shape() && a.data() == b.data();
+    return a == b;
 }
 
 // Pretty-prints the tensor to stdout.
@@ -107,11 +111,6 @@ template <Arithmetic ComponentType>
 std::ostream &
 operator<<(std::ostream &out, const Tensor<ComponentType> &tensor)
 {   
-    auto& ldata = tensor.data();
-    for(auto val : ldata){
-        out << val << " ";
-    }
-    out << std::endl;
     return out;
 }
 
@@ -123,19 +122,29 @@ Tensor<ComponentType> readTensorFromFile(const std::string &filename)
     size_t rank{0},val{0};
     tendata >> rank;
     std::vector<size_t> shape;
-    for (size_t i = 0; i < rank; i++)
-    {
+    for (size_t i = 0; i < rank; i++){
         tendata >> val;
         shape.push_back(val);
     }
     Tensor<ComponentType> res(shape);
     ComponentType dataval;
-    std::vector<ComponentType> data;
-    while(tendata.good()){
+    auto loctoindex = [&shape](size_t loc)
+    {
+        std::vector<size_t> idx(shape.size());
+        size_t mul{1};
+        for (int i = shape.size() - 1; i >= 0; --i)
+        {
+            idx[i] = (loc / mul) % shape[i];
+            mul *= shape[i];
+        }
+        return idx;
+    };
+    for (size_t i = 0; i < res.numElements(); ++i)
+    {
         tendata >> dataval;
-        data.push_back(dataval);
+        const auto idx = loctoindex(i);
+        res(idx) = dataval;   
     }
-    res.linfill(std::move(data));
     return res;
 }
 
@@ -148,7 +157,23 @@ void writeTensorToFile(const Tensor<ComponentType> &tensor, const std::string &f
     for(auto val : tensor.shape()){
         tenfile << val << std::endl;
     }
-    for(auto val : tensor.data()){
-        tenfile << val << std::endl;
-    }    
+
+    auto shape = tensor.shape();
+    auto loctoindex = [&shape](size_t loc)
+    {
+        std::vector<size_t> idx(shape.size());
+        size_t mul{1};
+        for (int i = shape.size() - 1; i >= 0; --i)
+        {
+            idx[i] = (loc / mul) % shape[i];
+            mul *= shape[i];
+        }
+        return idx;
+    };
+    for (size_t i = 0; i < tensor.numElements(); ++i)
+    {
+        const auto idx = loctoindex(i);
+        tenfile << tensor(idx) << std::endl;  
+    }
+    
 }
