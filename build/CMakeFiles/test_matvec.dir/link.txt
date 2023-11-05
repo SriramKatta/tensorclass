@@ -1,1 +1,0 @@
-/usr/bin/g++ -g -pg CMakeFiles/test_matvec.dir/test_matvec.cpp.o -o test_matvec 

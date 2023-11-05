@@ -64,7 +64,6 @@ CMAKE_BINARY_DIR = /home/sanju2204/fauprojects/advpt/tensor/build
 
 # The main recursive "all" target.
 all: CMakeFiles/test_tensor.dir/all
-all: CMakeFiles/test_matvec.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -73,7 +72,6 @@ preinstall:
 
 # The main recursive "clean" target.
 clean: CMakeFiles/test_tensor.dir/clean
-clean: CMakeFiles/test_matvec.dir/clean
 .PHONY : clean
 
 #=============================================================================
@@ -83,7 +81,7 @@ clean: CMakeFiles/test_matvec.dir/clean
 CMakeFiles/test_tensor.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_tensor.dir/build.make CMakeFiles/test_tensor.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_tensor.dir/build.make CMakeFiles/test_tensor.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/sanju2204/fauprojects/advpt/tensor/build/CMakeFiles --progress-num=3,4 "Built target test_tensor"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/sanju2204/fauprojects/advpt/tensor/build/CMakeFiles --progress-num=1,2 "Built target test_tensor"
 .PHONY : CMakeFiles/test_tensor.dir/all
 
 # Build rule for subdir invocation for target.
@@ -101,32 +99,6 @@ test_tensor: CMakeFiles/test_tensor.dir/rule
 CMakeFiles/test_tensor.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_tensor.dir/build.make CMakeFiles/test_tensor.dir/clean
 .PHONY : CMakeFiles/test_tensor.dir/clean
-
-#=============================================================================
-# Target rules for target CMakeFiles/test_matvec.dir
-
-# All Build rule for target.
-CMakeFiles/test_matvec.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_matvec.dir/build.make CMakeFiles/test_matvec.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_matvec.dir/build.make CMakeFiles/test_matvec.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/sanju2204/fauprojects/advpt/tensor/build/CMakeFiles --progress-num=1,2 "Built target test_matvec"
-.PHONY : CMakeFiles/test_matvec.dir/all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/test_matvec.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/sanju2204/fauprojects/advpt/tensor/build/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/test_matvec.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/sanju2204/fauprojects/advpt/tensor/build/CMakeFiles 0
-.PHONY : CMakeFiles/test_matvec.dir/rule
-
-# Convenience name for target.
-test_matvec: CMakeFiles/test_matvec.dir/rule
-.PHONY : test_matvec
-
-# clean rule for target.
-CMakeFiles/test_matvec.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_matvec.dir/build.make CMakeFiles/test_matvec.dir/clean
-.PHONY : CMakeFiles/test_matvec.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

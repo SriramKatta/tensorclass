@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include <iostream>
@@ -76,7 +75,7 @@ public:
     operator()(const std::vector<size_t> &idx) const {        
         size_t loc{} ;
         for (size_t i = 0; i < idx.size(); i++)        {
-            loc = idx[i] * mShape[i];
+            loc += idx[i] * mShape[i];
         }
         return mData[loc];
     }
@@ -86,7 +85,7 @@ public:
     operator()(const std::vector<size_t> &idx){
                 size_t loc{} ;
         for (size_t i = 0; i < idx.size(); i++)        {
-            loc = idx[i] * mShape[i];
+            loc += idx[i] * mShape[i];
         }
         return mData[loc];
     }

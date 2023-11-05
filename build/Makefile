@@ -129,43 +129,6 @@ test_tensor/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_tensor.dir/build.make CMakeFiles/test_tensor.dir/build
 .PHONY : test_tensor/fast
 
-#=============================================================================
-# Target rules for targets named test_matvec
-
-# Build rule for target.
-test_matvec: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_matvec
-.PHONY : test_matvec
-
-# fast build rule for target.
-test_matvec/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_matvec.dir/build.make CMakeFiles/test_matvec.dir/build
-.PHONY : test_matvec/fast
-
-test_matvec.o: test_matvec.cpp.o
-.PHONY : test_matvec.o
-
-# target to build an object file
-test_matvec.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_matvec.dir/build.make CMakeFiles/test_matvec.dir/test_matvec.cpp.o
-.PHONY : test_matvec.cpp.o
-
-test_matvec.i: test_matvec.cpp.i
-.PHONY : test_matvec.i
-
-# target to preprocess a source file
-test_matvec.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_matvec.dir/build.make CMakeFiles/test_matvec.dir/test_matvec.cpp.i
-.PHONY : test_matvec.cpp.i
-
-test_matvec.s: test_matvec.cpp.s
-.PHONY : test_matvec.s
-
-# target to generate assembly for a file
-test_matvec.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_matvec.dir/build.make CMakeFiles/test_matvec.dir/test_matvec.cpp.s
-.PHONY : test_matvec.cpp.s
-
 test_tensor.o: test_tensor.cpp.o
 .PHONY : test_tensor.o
 
@@ -198,11 +161,7 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... test_matvec"
 	@echo "... test_tensor"
-	@echo "... test_matvec.o"
-	@echo "... test_matvec.i"
-	@echo "... test_matvec.s"
 	@echo "... test_tensor.o"
 	@echo "... test_tensor.i"
 	@echo "... test_tensor.s"
