@@ -122,7 +122,7 @@ Vector< ComponentType > matvec(const Matrix< ComponentType >& mat, const Vector<
     for (size_t i = 0; i < ressize; ++i){
         for (size_t idx = 0; idx < ressize; ++idx)
         {
-            //std::cout << "res = " << res(i) << " mat(i,idx) = " << mat(i,idx) << " vec(idx) =  " << vec(idx) <<std::endl;
+            std::cout << "res = " << res(i) << " mat(i,idx) = " << mat(i,idx) << " vec(idx) =  " << vec(idx) <<std::endl;
             res(i) = res(i) + mat(i,idx)*vec(idx);
         }
     }
