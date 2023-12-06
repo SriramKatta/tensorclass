@@ -27,34 +27,31 @@ concept Arithmetic = std::is_arithmetic_v<T>;
 template <Arithmetic ComponentType> class Tensor {
 public:
   // Constructs a tensor with rank = 0 and zero-initializes the element.
-  Tensor() : mData(1), mShape(), mStrides(stridecalc(mShape)) {}
+  Tensor(): 
+  mData(1), 
+  mShape(), 
+  mStrides(){}
 
   // Constructs a tensor with arbitrary shape and zero-initializes all elements.
-  Tensor(const std::vector<size_t> &shape)
-      : mData(std::accumulate(shape.begin(), shape.end(), 1,
-                              std::multiplies<size_t>()),
-              0),
-        mShape(shape),
-        mStrides(stridecalc(mShape)) {}
+  Tensor(const std::vector<size_t> &shape):
+  Tensor(shape, 0){}
 
   // Constructs a tensor with arbitrary shape and fills it with the specified
   // value.
-  explicit Tensor(const std::vector<size_t> &shape,
-                  const ComponentType &fillValue)
-      : mData(std::accumulate(shape.begin(), shape.end(), 1,
-                              std::multiplies<size_t>()),
-              fillValue),
-        mShape(shape),
-        mStrides(stridecalc(mShape))
-        {}
+  explicit Tensor(const std::vector<size_t> &shape, const ComponentType &fillValue): 
+  mData(std::accumulate(shape.begin(), shape.end(), 1,std::multiplies<size_t>()),fillValue),
+  mShape(shape),
+  mStrides(stridecalc(mShape)){}
 
   // Copy-constructor.
   Tensor(const Tensor<ComponentType> &other)
-      : mData(other.mData), mShape(other.mShape) {}
+      : mData(other.mData), mShape(other.mShape), mStrides(other.mStrides) {}
 
   // Move-constructor.
-  Tensor(Tensor<ComponentType> &&other) noexcept
-      : mData(std::move(other.mData)), mShape(std::move(other.mShape)) {
+  Tensor(Tensor<ComponentType> &&other) noexcept : 
+  mData(std::move(other.mData)), 
+  mShape(std::move(other.mShape)),
+  mStrides(std::move(other.mStrides)) {
     other = Tensor<ComponentType>();
   }
 
@@ -62,6 +59,7 @@ public:
   Tensor &operator=(const Tensor<ComponentType> &other) {
     this->mData = other.mData;
     this->mShape = other.mShape;
+    this->mStrides = other.mStrides;
     return *this;
   }
 
@@ -69,6 +67,7 @@ public:
   Tensor &operator=(Tensor<ComponentType> &&other) noexcept {
     this->mData = std::move(other.mData);
     this->mShape = std::move(other.mShape);
+    this->mStrides = std::move(other.mStrides);
     return *this;
   }
 
