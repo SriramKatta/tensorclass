@@ -16,3 +16,9 @@ add_executable(test_matvec test_matvec.cpp)
 target_compile_features(test_matvec PRIVATE cxx_std_20)
 target_compile_options(test_matvec PRIVATE -Wall -Wextra -pedantic -Werror -pg -g)
 target_link_options(test_matvec PRIVATE -pg)
+
+
+add_executable(mytensortest mytensortest.cpp)
+target_compile_features(mytensortest PRIVATE cxx_std_20)
+target_compile_options(mytensortest PRIVATE -Wall -Wextra -pedantic -Werror -pg -g)
+target_link_options(mytensortest PRIVATE -pg)
