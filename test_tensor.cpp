@@ -12,7 +12,7 @@
 Profiling timer expired
 */
 
-
+#include <iostream>
 #include "tensor.hpp"
 
 void check(bool condition, const std::string& msg)
@@ -73,8 +73,9 @@ void test_move(std::vector< std::pair< bool, std::string > >& results)
 void test_access(std::vector< std::pair< bool, std::string > >& results)
 {
     Tensor< int > a;
-    a({}) = 444;
-    results.push_back({a({}) == 444, "test_constructor: correct access rank 0"});
+    a({}) = 445;
+    std::cout<< a << std::endl;
+    results.push_back({a({}) == 445, "test_constructor: correct access rank 0"});
 }
 
 void test_fileio(std::vector< std::pair< bool, std::string > >& results)

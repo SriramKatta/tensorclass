@@ -27,31 +27,28 @@ concept Arithmetic = std::is_arithmetic_v<T>;
 template <Arithmetic ComponentType> class Tensor {
 public:
   // Constructs a tensor with rank = 0 and zero-initializes the element.
-  Tensor(): 
-  mData(1), 
-  mShape(), 
-  mStrides(){}
+  Tensor() : mData(1), mShape(), mStrides() {}
 
   // Constructs a tensor with arbitrary shape and zero-initializes all elements.
-  Tensor(const std::vector<size_t> &shape):
-  Tensor(shape, 0){}
+  Tensor(const std::vector<size_t> &shape) : Tensor(shape, 0) {}
 
   // Constructs a tensor with arbitrary shape and fills it with the specified
   // value.
-  explicit Tensor(const std::vector<size_t> &shape, const ComponentType &fillValue): 
-  mData(std::accumulate(shape.begin(), shape.end(), 1,std::multiplies<size_t>()),fillValue),
-  mShape(shape),
-  mStrides(stridecalc(mShape)){}
+  explicit Tensor(const std::vector<size_t> &shape,
+                  const ComponentType &fillValue)
+      : mData(std::accumulate(shape.begin(), shape.end(), 1,
+                              std::multiplies<size_t>()),
+              fillValue),
+        mShape(shape), mStrides(stridecalc(mShape)) {}
 
   // Copy-constructor.
   Tensor(const Tensor<ComponentType> &other)
       : mData(other.mData), mShape(other.mShape), mStrides(other.mStrides) {}
 
   // Move-constructor.
-  Tensor(Tensor<ComponentType> &&other) noexcept : 
-  mData(std::move(other.mData)), 
-  mShape(std::move(other.mShape)),
-  mStrides(std::move(other.mStrides)) {
+  Tensor(Tensor<ComponentType> &&other) noexcept
+      : mData(std::move(other.mData)), mShape(std::move(other.mShape)),
+        mStrides(std::move(other.mStrides)) {
     other = Tensor<ComponentType>();
   }
 
@@ -96,20 +93,24 @@ public:
     auto &a = *this;
     return a.mShape == b.mShape && a.mData == b.mData;
   }
+  template <Arithmetic Component>
+  friend void writeTensorToFile(const Tensor<Component> &tensor,const std::string &filename);
+
+  template <Arithmetic Component>
+  friend Tensor<Component> readTensorFromFile(const std::string &filename);
 
 private:
   size_t indextoloc(const std::vector<size_t> &idx) const {
-    return std::inner_product(idx.begin(),idx.end(), mStrides.begin(), 1);
+    return std::inner_product(idx.begin(), idx.end(), mStrides.begin(), 0);
   }
-  std::vector<size_t> stridecalc(std::vector<size_t>& shape){
-      std::vector<size_t> tmpstride(mShape.size(), 1);
-      std::size_t product = 1;
-      for (size_t i = tmpstride.size(); i-- > 0;)
-      {
-        tmpstride[i] = product;
-        product = product*shape[i]; 
-      }
-      return tmpstride;
+  std::vector<size_t> stridecalc(std::vector<size_t> &shape) {
+    std::vector<size_t> tmpstride(mShape.size(), 0);
+    std::size_t product = 1;
+    for (size_t i = tmpstride.size(); i-- > 0;) {
+      tmpstride[i] = product;
+      product = product * shape[i];
+    }
+    return tmpstride;
   }
 
   std::vector<ComponentType> mData;
@@ -138,20 +139,9 @@ Tensor<ComponentType> readTensorFromFile(const std::string &filename) {
     shape.push_back(val);
   }
   Tensor<ComponentType> res(shape);
-  ComponentType dataval;
-  auto loctoindex = [&shape](size_t loc) {
-    std::vector<size_t> idx(shape.size());
-    size_t mul{1};
-    for (int i = shape.size() - 1; i >= 0; --i) {
-      idx[i] = (loc / mul) % shape[i];
-      mul *= shape[i];
-    }
-    return idx;
-  };
-  for (size_t i = 0; i < res.numElements(); ++i) {
-    tendata >> dataval;
-    const auto idx = loctoindex(i);
-    res(idx) = dataval;
+  for (auto &loc : res.mData) {
+    tendata >> val;
+    loc = val;
   }
   return res;
 }
@@ -162,23 +152,11 @@ void writeTensorToFile(const Tensor<ComponentType> &tensor,
                        const std::string &filename) {
   std::ofstream tenfile(filename);
   tenfile << tensor.rank() << std::endl;
-  for (auto val : tensor.shape()) {
+  for (auto &val : tensor.shape()) {
     tenfile << val << std::endl;
   }
-
-  auto shape = tensor.shape();
-  auto loctoindex = [&shape](size_t loc) {
-    std::vector<size_t> idx(shape.size());
-    size_t mul{1};
-    for (int i = shape.size() - 1; i >= 0; --i) {
-      idx[i] = (loc / mul) % shape[i];
-      mul *= shape[i];
-    }
-    return idx;
-  };
-  for (size_t i = 0; i < tensor.numElements(); ++i) {
-    const auto idx = loctoindex(i);
-    tenfile << tensor(idx) << std::endl;
+  for (auto &loc : tensor.mData) {
+    tenfile << loc << std::endl;
   }
 }
 
@@ -196,6 +174,12 @@ void printtensor(std::ostream &out, const Tensor<ComponentType> &tensor,
                  const std::vector<size_t> &shape,
                  std::vector<size_t> currentIndices = {},
                  size_t dimension = 0) {
+
+  if (shape.size() == 0) {
+    out << tensor({}) << std::endl;
+    return;
+  }
+
   const size_t numElements = shape[dimension];
 
   out << "Dimension " << dimension << " (" << numElements
