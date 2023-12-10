@@ -1,4 +1,11 @@
-
+/*
+ * tensor.hpp
+ *
+ *  Created on: 10.11.2023
+ *      modified : 10.12.2023
+ *      Author: Sriram Katta
+ *      c++std  : C++20
+ */
 #pragma once
 
 #include <iostream>
