@@ -150,12 +150,14 @@ Tensor< DataType > readTensorFromFile(const std::string& filename)
         tensorfile >> fileval;
         shape.push_back(fileval);
     }
+    
     Tensor<DataType> res(shape);
-    for (auto &loc : res.mData)
-    {
+
+    for (auto &loc : res.mData){
         tensorfile >> fileval;
         loc = std::move(fileval);
     }
+
     return res;
 }
 
