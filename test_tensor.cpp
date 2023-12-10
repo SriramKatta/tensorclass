@@ -1,18 +1,4 @@
-/*--- 25/25 checks passed ---
-************************************************************************************************
-==2013== LEAK SUMMARY:
-==2013==    definitely lost: 0 bytes in 0 blocks
-==2013==    indirectly lost: 0 bytes in 0 blocks
-==2013==      possibly lost: 0 bytes in 0 blocks
-==2013==    still reachable: 188,344 bytes in 3 blocks
-==2013==         suppressed: 0 bytes in 0 blocks
-==2013==
-==2013== For lists of detected and suppressed errors, rerun with: -s
-==2013== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-Profiling timer expired
-*/
 
-#include <iostream>
 #include "tensor.hpp"
 
 void check(bool condition, const std::string& msg)
@@ -37,7 +23,6 @@ void test_constructor(std::vector< std::pair< bool, std::string > >& results)
 
     results.push_back({c.numElements() == 3 * 5 * 8, "test_constructor: correct number of elements"});
     results.push_back({a({}) == 0, "test_constructor: correct initialization"});
-    //segfault next here
     results.push_back({b({2, 1, 1}) == 0, "test_constructor: correct initialization"});
     results.push_back({c({2, 1, 1}) == 42, "test_constructor: correct initialization"});
     results.push_back({d.rank() == 10, "test_constructor: correct rank"});
@@ -73,9 +58,8 @@ void test_move(std::vector< std::pair< bool, std::string > >& results)
 void test_access(std::vector< std::pair< bool, std::string > >& results)
 {
     Tensor< int > a;
-    a({}) = 445;
-    std::cout<< a << std::endl;
-    results.push_back({a({}) == 445, "test_constructor: correct access rank 0"});
+    a({}) = 444;
+    results.push_back({a({}) == 444, "test_constructor: correct access rank 0"});
 }
 
 void test_fileio(std::vector< std::pair< bool, std::string > >& results)
@@ -86,7 +70,6 @@ void test_fileio(std::vector< std::pair< bool, std::string > >& results)
     results.push_back({a({0, 1}) == 0, "test_io: tensor 01 correct entry"});
     results.push_back({a({1, 0}) == 0, "test_io: tensor 01 correct entry"});
     results.push_back({a({1, 1}) == -1, "test_io: tensor 01 correct entry"});
-
     Tensor< int > b({2, 2, 2});
     b({0, 0, 0}) = 1;
     b({0, 0, 1}) = 2;
@@ -96,7 +79,7 @@ void test_fileio(std::vector< std::pair< bool, std::string > >& results)
     b({1, 0, 1}) = 6;
     b({1, 1, 0}) = 7;
     b({1, 1, 1}) = 8;
-
+    
     writeTensorToFile< int >(b, "data/tensor_out");
     auto c = readTensorFromFile< int >("data/tensor_out");
 
