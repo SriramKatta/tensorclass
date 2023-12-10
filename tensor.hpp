@@ -102,14 +102,28 @@ private:
     std::vector<size_t> mStride; 
 
     std::vector<size_t> stridecalc() const {
+        /* MY IMPL
         std::vector<size_t> res;
         res.reserve(mShape.size());
         res.push_back(1);
-        for (size_t i = 1; i < mShape.size() ;++i)
-        {
+        for (size_t i = mShape.size()-1; i >= 1 ; --i)
             res.push_back(res.back() * mShape[i]);
-        }
         std::reverse(res.begin(),res.end());
+        return res;
+        */
+
+       /*
+       r/<-l  multiply l and r and store above l
+       mshape :: strides 
+       4/<-12
+       6/<-2
+       2/<- 1
+       
+       */
+
+        //no raw loop impl
+        std::vector<size_t> res(mShape.size(), 1);
+        std::partial_sum(mShape.rbegin(), mShape.rend() - 1, res.rbegin() + 1, std::multiplies<size_t>());
         return res;
     }
 
