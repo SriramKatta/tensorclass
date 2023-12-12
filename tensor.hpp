@@ -193,6 +193,74 @@ void writeTensorToFile(const Tensor< DataType >& tensor, const std::string& file
 // Pretty-prints the tensor to stdout.
 // This is not necessary (and not covered by the tests) but nice to have, also for debugging (and for exercise of course...).
 
+template< Arithmetic ComponentType >
+std::ostream&
+operator<<(std::ostream& out, const Tensor< ComponentType >& tensor)
+{
+
+    if (tensor.rank() == 0)
+    {
+        std::vector< size_t > idx(0);
+        out << "() [" << tensor(idx) << "]\n";
+    }
+    else if (tensor.rank() == 1)
+    {
+        out << "(:) [";
+        for (size_t i = 0; i < tensor.shape()[0] - 1; i++)
+        {
+            std::vector< size_t > idx(1);
+            idx[0] = i;
+            out << tensor(idx) << " ";
+        }
+        std::vector< size_t > idx(1);
+        idx[0] = tensor.shape()[0] - 1;
+        out << tensor(idx) << "]\n";
+    }
+    else
+    {
+        size_t cnt = 0;
+        std::vector< size_t > idx(tensor.rank(), 0);
+
+        while (cnt < tensor.numElements())
+        {
+            out << "(";
+            for (size_t i = 0; i < tensor.rank() - 1; i++)
+            {
+                out << idx[i] << ", ";
+            }
+            out << ":) [";
+            for (size_t i = 0; i < tensor.shape()[tensor.rank() - 1] - 1; i++)
+            {
+                out << tensor(idx) << " ";
+                idx[tensor.rank() - 1]++;
+            }
+
+            out << tensor(idx) << "]\n";
+            idx[tensor.rank() - 1]++;
+
+            for (size_t i = tensor.rank() - 1; i > 0; i--)
+            {
+                if (idx[i] >= tensor.shape()[i])
+                {
+                    idx[i] = 0;
+                    idx[i - 1]++;
+                }
+            }
+
+            cnt += tensor.shape()[tensor.rank() - 1];
+        }
+    }
+
+    return out;
+}
+
+
+
+
+
+
+
+/*
 template <Arithmetic DataType>
 std::ostream &operator<<(std::ostream &out,
                          const Tensor<DataType> &tensor) {
@@ -251,3 +319,5 @@ void printtensor(std::ostream &out, const Tensor<DataType> &tensor,
     currentIndices.pop_back();
   }
 }
+
+*/
