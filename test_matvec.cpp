@@ -16,16 +16,11 @@ PASSED: test_matvec: result equal to file
 #include "matvec.hpp"
 #include "tensor.hpp"
 
-void check(bool condition, const std::string &msg) {
-  if (!condition) {
-    std::cout << "FAILED: " << msg << "\n";
-  } else {
-    std::cout << "PASSED: " << msg << "\n";
-  }
-}
+#include "gtest/gtest.h"
 
-void test_matvec(std::vector<std::pair<bool, std::string>> &results) {
 
+
+TEST(MatVecTest, test_matvec) {
   Matrix<int> A("data/matrix");
   Vector<int> x("data/vector_in");
   Vector<int> y_read("data/vector_out");
@@ -36,25 +31,6 @@ void test_matvec(std::vector<std::pair<bool, std::string>> &results) {
 
   auto y_comp = matvec(A, x);
 
-  results.push_back({y_comp.tensor() == y_read.tensor(),
-                     "test_matvec: result equal to file"});
+  EXPECT_EQ(y_comp.tensor(), y_read.tensor());
 }
 
-int main() {
-  std::vector<std::pair<bool, std::string>> results;
-
-  test_matvec(results);
-
-  size_t passed = 0;
-  for (auto [condition, msg] : results) {
-    check(condition, msg);
-    if (condition) {
-      passed++;
-    }
-  }
-
-  std::cout << "--- " << passed << "/" << results.size() << " checks passed ---"
-            << std::endl;
-
-  return passed != results.size();
-}
