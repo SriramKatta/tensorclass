@@ -1,75 +1,67 @@
 
+#include "gtest/gtest.h"
 #include "tensor.hpp"
 
-void check(bool condition, const std::string& msg)
+TEST(TensorTest, Constructor)
 {
-    if (!condition)
-    {
-        std::cout << "FAILED: " << msg << "\n";
-    }
-    else
-    {
-        std::cout << "PASSED: " << msg << "\n";
-    }
+    Tensor< int> a;
+    Tensor<int> b({3, 5, 8});
+    Tensor<int> c({3, 5, 8}, 42);
+    Tensor<int> d({3, 5, 8, 6, 2, 8, 2, 7, 7, 8}, 42);
+
+    ASSERT_EQ(c.numElements(), 3 * 5 * 8) << "failure in element count";
+    ASSERT_EQ(a({}), 0) << "failure in default ctor";
+    ASSERT_EQ(b({2, 1, 1}), 0) << "failure in default value of ctor";
+    ASSERT_EQ(c({2, 1, 1}), 42) << "failure in fill value of ctor";
+    ASSERT_EQ(d.rank(), 10) << "failure in rank";
 }
 
+TEST(TensorTest, MoveSemantics){
+    Tensor<int> a({2,2,2}, 2);
+    auto b = a;
+    ASSERT_EQ(a,b) << "failure in copy assignment";
+    auto c = std::move(a);
+    Tensor<int> d;
+    ASSERT_EQ(a,d) << "failure in move assignment";
+    ASSERT_EQ(c,b) << "failure in move constructor";
 
-void test_constructor(std::vector< std::pair< bool, std::string > >& results)
-{
-    Tensor< int > a;
-    Tensor< int > b({3, 5, 8});
-    Tensor< int > c({3, 5, 8}, 42);
-    Tensor< int > d({3, 5, 8, 6, 2, 8, 2, 7, 7, 8}, 42);
-
-    results.push_back({c.numElements() == 3 * 5 * 8, "test_constructor: correct number of elements"});
-    results.push_back({a({}) == 0, "test_constructor: correct initialization"});
-    results.push_back({b({2, 1, 1}) == 0, "test_constructor: correct initialization"});
-    results.push_back({c({2, 1, 1}) == 42, "test_constructor: correct initialization"});
-    results.push_back({d.rank() == 10, "test_constructor: correct rank"});
-
-    Tensor< float > e;
-    Tensor< double > f({4, 5, 6, 7});
-    Tensor< bool > g({3, 3}, true);
+    a = b;
+    Tensor<int> e(std::move(a));
+    Tensor<int> f;
+    ASSERT_EQ(a,f) << "incorrect satte after move assignment";
+    ASSERT_EQ(e,b) << "failure in move assignment";
+    
 }
 
-void test_move(std::vector< std::pair< bool, std::string > >& results)
-{
-    {
-        Tensor< int > a({2, 2, 2}, 2);
-        auto b = a;
+TEST(TensorTest, Access){
+    Tensor<int> a({2,2,2}, 2);
+    a({0,0,0}) = 1;
+    a({0,0,1}) = 2;
+    a({0,1,0}) = 3;
+    a({0,1,1}) = 4;
+    a({1,0,0}) = 5;
+    a({1,0,1}) = 6;
+    a({1,1,0}) = 7;
+    a({1,1,1}) = 8;
 
-        results.push_back({a == b, "test_move: copy-assignment"});
-
-        auto c = std::move(a);
-        Tensor< int > d;
-
-        results.push_back({a == d, "test_move: correct state after move"});
-        results.push_back({c == b, "test_move: move succeeded"});
-
-        a = b;
-        Tensor< int > e(std::move(a));
-        Tensor< int > f;
-
-        results.push_back({a == f, "test_move: correct state after move"});
-        results.push_back({e == b, "test_move: move succeeded"});
-    }
+    ASSERT_EQ(a({0,0,0}), 1) << "failure in access";
+    ASSERT_EQ(a({0,0,1}), 2) << "failure in access";
+    ASSERT_EQ(a({0,1,0}), 3) << "failure in access";
+    ASSERT_EQ(a({0,1,1}), 4) << "failure in access";
+    ASSERT_EQ(a({1,0,0}), 5) << "failure in access";
+    ASSERT_EQ(a({1,0,1}), 6) << "failure in access";
+    ASSERT_EQ(a({1,1,0}), 7) << "failure in access";
+    ASSERT_EQ(a({1,1,1}), 8) << "failure in access";
 }
 
-void test_access(std::vector< std::pair< bool, std::string > >& results)
-{
-    Tensor< int > a;
-    a({}) = 444;
-    results.push_back({a({}) == 444, "test_constructor: correct access rank 0"});
-}
-
-void test_fileio(std::vector< std::pair< bool, std::string > >& results)
-{
+TEST(TensorTest, fileio){
     auto a = readTensorFromFile< int >("data/tensor_01");
-    results.push_back({a.rank() == 2, "test_io: tensor 01 correct rank"});
-    results.push_back({a({0, 0}) == 1, "test_io: tensor 01 correct entry"});
-    results.push_back({a({0, 1}) == 0, "test_io: tensor 01 correct entry"});
-    results.push_back({a({1, 0}) == 0, "test_io: tensor 01 correct entry"});
-    results.push_back({a({1, 1}) == -1, "test_io: tensor 01 correct entry"});
+    ASSERT_EQ(a.rank(), 2) << "failure in rank";
+    ASSERT_EQ(a({0, 0}), 1) << "failure in entry";
+    ASSERT_EQ(a({0, 1}), 0) << "failure in entry";
+    ASSERT_EQ(a({1, 0}), 0) << "failure in entry";
+    ASSERT_EQ(a({1, 1}), -1) << "failure in entry";
+
     Tensor< int > b({2, 2, 2});
     b({0, 0, 0}) = 1;
     b({0, 0, 1}) = 2;
@@ -83,40 +75,16 @@ void test_fileio(std::vector< std::pair< bool, std::string > >& results)
     writeTensorToFile< int >(b, "data/tensor_out");
     auto c = readTensorFromFile< int >("data/tensor_out");
 
-    results.push_back({c({0, 0, 0}) == 1, "test_io: tensor write correct entry"});
-    results.push_back({c({0, 0, 1}) == 2, "test_io: tensor write correct entry"});
-    results.push_back({c({0, 1, 0}) == 3, "test_io: tensor write correct entry"});
-    results.push_back({c({0, 1, 1}) == 4, "test_io: tensor write correct entry"});
-    results.push_back({c({1, 0, 0}) == 5, "test_io: tensor write correct entry"});
-    results.push_back({c({1, 0, 1}) == 6, "test_io: tensor write correct entry"});
-    results.push_back({c({1, 1, 0}) == 7, "test_io: tensor write correct entry"});
-    results.push_back({c({1, 1, 1}) == 8, "test_io: tensor write correct entry"});
+    ASSERT_EQ(c({0, 0, 0}), 1) << "failure in write";
+    ASSERT_EQ(c({0, 0, 1}), 2) << "failure in write";
+    ASSERT_EQ(c({0, 1, 0}), 3) << "failure in write";
+    ASSERT_EQ(c({0, 1, 1}), 4) << "failure in write";
+    ASSERT_EQ(c({1, 0, 0}), 5) << "failure in write";
+    ASSERT_EQ(c({1, 0, 1}), 6) << "failure in write";
+    ASSERT_EQ(c({1, 1, 0}), 7) << "failure in write";
+    ASSERT_EQ(c({1, 1, 1}), 8) << "failure in write";
 
     auto d = readTensorFromFile< int >("data/tensor_02");
 
-    results.push_back({c == d, "test_io: tensor read/write correct"});
-}
-
-int main()
-{
-    std::vector< std::pair< bool, std::string > > results;
-
-    test_constructor(results);
-    test_move(results);
-    test_access(results);
-    test_fileio(results);
-
-    size_t passed = 0;
-    for (auto [condition, msg] : results)
-    {
-        check(condition, msg);
-        if (condition)
-        {
-            passed++;
-        }
-    }
-
-    std::cout << "--- " << passed << "/" << results.size() << " checks passed ---" << std::endl;
-
-    return passed != results.size();
+    ASSERT_EQ(c,d) << "failure in read/write";
 }

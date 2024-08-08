@@ -13,13 +13,18 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include(CTest)
 include(external/googletests.cmake)
 
+
 if (BUILD_TESTING)
     add_executable(test_matvec test_matvec.cpp)
     target_link_libraries(test_matvec PRIVATE GTest::gtest_main)
 
+    add_executable(test_tensor test_tensor.cpp)
+    target_link_libraries(test_tensor PRIVATE GTest::gtest_main)
+
     include(GoogleTest)
     # Finds all the Google tests associated with the executable
     gtest_discover_tests(test_matvec)
+    gtest_discover_tests(test_tensor)
 endif()
 
 
